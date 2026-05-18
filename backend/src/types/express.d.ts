@@ -1,10 +1,8 @@
 import type { AuthUser } from "./shared.types.js";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: AuthUser;
-    }
+declare module "express-serve-static-core" {
+  interface Request {
+    user?: AuthUser;
   }
 }
 

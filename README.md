@@ -229,6 +229,41 @@ Deployment notes:
 - Supabase is external; this compose file does not run a local database.
 - `NEXT_PUBLIC_*` values are baked into the frontend image during build, so rebuild the frontend image when those values change.
 
+## Vercel Deployment
+
+The root `vercel.json` deploys the Next.js frontend. Vercel does not run this repository's `docker-compose.yml` or host the Express API as a long-running second service from the same deployment.
+
+Recommended Vercel setup:
+
+1. Deploy the Express backend separately, for example on Render, Railway, Fly.io, a VPS, or another Node hosting provider.
+2. Update `vercel.json`:
+
+   ```json
+   {
+     "source": "/api/:path*",
+     "destination": "https://your-backend-domain.com/api/:path*"
+   }
+   ```
+
+3. In Vercel project environment variables, set:
+
+   ```env
+   NEXT_PUBLIC_API_BASE_URL=/api
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+   ```
+
+4. In the backend host environment, set:
+
+   ```env
+   FRONTEND_ORIGIN=https://your-vercel-app.vercel.app
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_ANON_KEY=your_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   ```
+
+If you want the backend on Vercel too, it should be refactored into Vercel serverless functions under `api/`; the current Express server is designed as a standalone Node service.
+
 ## Available Scripts
 
 Frontend:

@@ -29,3 +29,5 @@ app.use("/api/leads", leadRouter);
 
 app.use(notFound);
 app.use(errorHandler);
+
+export default app;

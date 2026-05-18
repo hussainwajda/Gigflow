@@ -1,11 +1,11 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Response } from "express";
 
 import { supabaseAdmin, supabaseAnon } from "../config/supabase.js";
 import { AppError } from "../utils/app-error.js";
 import { queryable } from "../utils/supabase-query.js";
-import type { AuthUser } from "../types/shared.types.js";
+import type { AuthenticatedRequest, AuthUser } from "../types/shared.types.js";
 
-export async function auth(req: Request, _res: Response, next: NextFunction): Promise<void> {
+export async function auth(req: AuthenticatedRequest, _res: Response, next: NextFunction): Promise<void> {
   try {
     const header = req.headers.authorization;
     const token = header?.startsWith("Bearer ") ? header.slice(7) : null;

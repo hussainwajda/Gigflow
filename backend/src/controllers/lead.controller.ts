@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 
 import { createLead, findLead, listLeads, listLeadsForExport, removeLead, updateLead } from "../services/lead.service.js";
 import type { GetLeadsParams } from "../services/lead.service.js";
-import type { ApiSuccess, Lead } from "../types/shared.types.js";
+import type { ApiSuccess, AuthenticatedRequest, Lead } from "../types/shared.types.js";
 import { AppError } from "../utils/app-error.js";
 import { leadsToCsv } from "../utils/csv.js";
 
@@ -16,13 +16,13 @@ export async function getLead(req: Request, res: Response<ApiSuccess<Lead>>): Pr
   res.status(200).json({ success: true, data: lead });
 }
 
-export async function postLead(req: Request, res: Response<ApiSuccess<Lead>>): Promise<void> {
+export async function postLead(req: AuthenticatedRequest, res: Response<ApiSuccess<Lead>>): Promise<void> {
   if (!req.user) throw new AppError("Unauthorized", 401);
   const lead = await createLead(req.body, req.user);
   res.status(201).json({ success: true, data: lead, message: "Lead created." });
 }
 
-export async function patchLead(req: Request, res: Response<ApiSuccess<Lead>>): Promise<void> {
+export async function patchLead(req: AuthenticatedRequest, res: Response<ApiSuccess<Lead>>): Promise<void> {
   if (!req.user) throw new AppError("Unauthorized", 401);
   const lead = await updateLead(req.params.id as string, req.body, req.user);
   res.status(200).json({ success: true, data: lead, message: "Lead updated." });

@@ -1,3 +1,5 @@
+import type { Request } from "express";
+
 export type UserRole = "admin" | "sales";
 export type LeadStatus = "New" | "Contacted" | "Qualified" | "Lost";
 export type LeadSource = "Website" | "Instagram" | "Referral";
@@ -7,6 +9,10 @@ export interface AuthUser {
   name: string;
   email: string;
   role: UserRole;
+}
+
+export interface AuthenticatedRequest extends Request {
+  user?: AuthUser;
 }
 
 export interface CreatedBy {
